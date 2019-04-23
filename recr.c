@@ -1,7 +1,8 @@
 #include <stdio.h>
-int b,d=0;
+int a[3];
+int d=0;
 int cu(i){
-	int c;
+	int c, b=0;
 	if (i>=3) return 1;
 		else {
 			if (a[i]>=10)
