@@ -1,5 +1,4 @@
 #include <stdio.h>
-int a[3] = {21,12,19};
 int b,d=0;
 int cu(i){
 	int c;
