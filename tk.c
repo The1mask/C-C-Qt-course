@@ -1,9 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 
+
+
 struct kniga{
 	char nm[10][10];
 	char ne[10][10];};
+
+
+
+
+
 int main(){
 	
 		
@@ -11,12 +18,16 @@ int main(){
 	
 	int q=0; //s4et4ik dlya zapolnenia knigi
 	struct kniga kn;
-	
+	char z[10]; //posimvolnii poisk
+	char m[10];
 	char o=0; //dlya zapolneniya entera fgets
 for(int a=0;a<10;a++){
-	kn.nm[a][a]=0;
-	kn.ne[a][a]='\0';
-}
+	for(int b=0;b<10;b++){
+	kn.nm[a][b]='\0';
+	kn.ne[a][b]='\0';
+	z[b]='.';
+	m[b]='.';
+}}
 vvod:
 
 
@@ -24,7 +35,7 @@ vvod:
 	printf("\n Vibirete deistvie: \n 1-Vvesti dannie. \n 2-Vivesti dannie. \n 3-Poisk \n :");
 int i=0; //s4et4ik dlya vivoda
 int g=0;	//dlya vibora poiska
-char z[10]; //posimvolnii poisk
+int d=0;
 int p=0; //Osnovnoe meny
 char v[10];// postro4nii poisk
 int e=0; //s4et4ik stroki
@@ -89,23 +100,32 @@ for(int c=0;c<10;c++){
 	
 	case 3:
 	
+	
 	scanf("%s", &z);
-	printf("z: %d", strlen(z));
-	for(int t=0;t<10;t++){
-		for(int u=0; u<10; u++){
-			if(kn.nm[t][u]==z[u] || kn.ne[t][u]==z[u]){
-				w++;
-				if(w=strlen(z)){e=t;}
-				}
-				else{
-					break;
-					}
-		}}
-	if(e!=0) {
-		printf("V %d stroke %s %s", e, &kn.nm[e][0], &kn.ne[e][0] );
-	}
-	else {printf("Ne naideno");
-		w=0;}
+	printf("\n %s %d", z, strlen(z));
+		for(int a=0;a<10;a++){
+			for(int b=0;b<10;b++){
+				if(kn.nm[a][b]==z[0]){
+					printf("\n pervoe %d %d %c %c", a, b, kn.nm[a][b], z[0]);
+					d++;
+					for(int f=b+1;f<10;f++){
+						if(kn.nm[a][f]==z[f]){
+							d++;
+							printf("\n naidenoo %d %c", d, kn.nm[a][f]);
+							if(strlen(z)==d){
+							m[a]=a;
+						printf("asdads");
+						}}
+					}}
+					else
+					printf("\n %d %d %d %c", a, b, kn.nm[a][b], z[0]);
+					}}
+					for(int a=0;a<10;a++){
+						if(m[a]!='.'){
+					printf("\n nashel %s", &kn.nm[m[a]][0]);
+	}}
+	
+	
 	goto vvod;
 	
 	}
