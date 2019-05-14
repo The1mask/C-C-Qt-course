@@ -15,7 +15,7 @@ int main(){
 	
 		
 	int w=0; //s4et4ik dlya posimvolnogo poiska
-	
+	char v[10];
 	int q=0; //s4et4ik dlya zapolnenia knigi
 	struct kniga kn;
 	char z[10]; //posimvolnii poisk
@@ -27,6 +27,7 @@ for(int a=0;a<10;a++){
 	kn.ne[a][b]='\0';
 	z[b]='.';
 	m[b]='.';
+	v[b]='\0';
 }}
 vvod:
 
@@ -37,7 +38,7 @@ int i=0; //s4et4ik dlya vivoda
 int g=0;	//dlya vibora poiska
 int d=0;
 int p=0; //Osnovnoe meny
-char v[10];// postro4nii poisk
+// postro4nii poisk
 int e=0; //s4et4ik stroki
 	scanf("%d", &p);
 	switch(p){
@@ -68,11 +69,13 @@ int e=0; //s4et4ik stroki
 	switch(g){
 		case 1:
 		printf("\n Vveite imya:");
-		scanf("%d", &o);
-		fgets(&v[0], 10, stdin);
+		scanf("%s", &v);
+		
 	for(int x=0;x<10;x++){
-		if(strcmp(&v[0], &kn.ne[x][x])){printf("\n ne nashel");
+		if(v==&kn.ne[x][0]){
+			printf("\n ne nashel");
 			printf("\n %s %s", &kn.ne[x][x], &v);
+			v[x]='\0';
 				  goto vvod;
 		}
 		else {printf("\n nashel");
@@ -83,15 +86,15 @@ int e=0; //s4et4ik stroki
 	case 2:
 			printf("\n Vveite nomer:");
 				//scanf("%d", &o);
-				scanf("%d", &z);
+				scanf("%d", &v);
 for(int c=0;c<10;c++){
-		if(strcmp(&z, &kn.nm[c][c])){
+		if(v==&kn.nm[c][0]){
 			printf("\n ne nashel");
-			printf("\n %d %d", kn.nm[c][c], z);
+			printf("\n %s %d", &kn.nm[c][c], v);
 				  
 		}
 		else {printf("\n nashel");
-			printf("\n %d %d", kn.nm[c][c], z);}
+			printf("\n %s %s", kn.nm[c][0], v);}
 
 			 
 }
@@ -100,29 +103,30 @@ for(int c=0;c<10;c++){
 	
 	case 3:
 	
-	
+	printf("\n Vvedite poisk:");
 	scanf("%s", &z);
-	printf("\n %s %d", z, strlen(z));
+	
 		for(int a=0;a<10;a++){
 			for(int b=0;b<10;b++){
-				if(kn.nm[a][b]==z[0]){
-					printf("\n pervoe %d %d %c %c", a, b, kn.nm[a][b], z[0]);
+				if(kn.nm[a][b]==z[0] || kn.ne[a][b]==z[0]){
+					
 					d++;
-					for(int f=b+1;f<10;f++){
-						if(kn.nm[a][f]==z[f]){
+					for(int f=b;f<10;f++){
+						if(kn.nm[a][f]==z[d] || kn.ne[a][f]==z[d]){
 							d++;
-							printf("\n naidenoo %d %c", d, kn.nm[a][f]);
 							if(strlen(z)==d){
 							m[a]=a;
-						printf("asdads");
+							d=0;
+						
 						}}
+						
 					}}
-					else
-					printf("\n %d %d %d %c", a, b, kn.nm[a][b], z[0]);
+					
 					}}
 					for(int a=0;a<10;a++){
 						if(m[a]!='.'){
-					printf("\n nashel %s", &kn.nm[m[a]][0]);
+					printf("\n V %d stroke nashel %s %s", m[a], &kn.nm[m[a]][0], &kn.ne[m[a]][0]);
+					m[a]='.';
 	}}
 	
 	
