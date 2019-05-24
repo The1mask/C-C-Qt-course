@@ -19,8 +19,7 @@ void bubble(int *num){
 }
 
 void print(float *num1, float *num2){
-	
-	printf("\n %f", num2[1]);
+
 	
 	qsort(num1, 10, sizeof(int), sort);
 	qsort(num2, 10, sizeof(int), sort);
