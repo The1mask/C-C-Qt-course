@@ -405,6 +405,7 @@ int main(){
 			cin>>pole2;
 			
 		hd.move(pole1,pole2);
+		hd.prnt();
 		cout<<"Ваш ход:";
 			cin>>pole1;
 			cin>>pole2;
@@ -419,7 +420,7 @@ int main(){
 		cout<<endl;
 		pobeda=hd.checkpl();
 		if(pobeda==1){
-			cout<<"ИИ победил!"<<endl;
+			cout<<"Игрок 2 победил!"<<endl;
 			hd.clear();
 		}
 			else{
