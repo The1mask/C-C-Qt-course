@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <QChar>
+#include <QString>
 
 typedef std::vector< std::vector< int > > Matrix;
 typedef std::vector< std::vector< char > > CharLetters;
@@ -32,7 +33,7 @@ public:
     int getBlockYPoints( int innerYBlocks ) const;
 
     void debug(int y,int x);
-
+        QChar a[35]={ ' ', u'а', u'б', u'в', u'г', u'д', u'е', u'ё', u'ж', u'з', u'и', u'й', u'к', u'л', u'м', u'н', u'о', u'п', u'р', u'с', u'т', u'у', u'ф', u'х', u'ц', u'ч', u'ш', u'щ', u'ь', u'ы', u'ъ', u'э', u'ю', u'я'};
        QChar letter;
        QChar test();
 
@@ -86,6 +87,20 @@ public:
     int getBlockType( int xBlocks, int yBlocks ) const;
     void getCollisionLetter();
 
+    QString firstStr;
+    QString secondStr;
+
+
+
+
+
+    QString getFirstStr() const;
+    void setFirstStr(const QString &value);
+
+
+
+    QString getSecondStr() const;
+    void setSecondStr(const QString &value);
 
 private:
     void moveItemX( int offsetPoints );

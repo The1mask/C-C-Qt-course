@@ -19,7 +19,7 @@ void TetrisController::onStep() {
     m_model->doStep();
     m_view->refresh();
     if( m_model->isGameOver() ) {
-        qDebug() << m_model->getScore();
+        //qDebug() << m_model->getScore();
         m_model->resetGame();
     }
 }

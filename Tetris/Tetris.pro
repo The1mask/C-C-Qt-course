@@ -24,3 +24,6 @@ HEADERS  += tetrisview.h \
 FORMS    +=
 
 QMAKE_CXXFLAGS += -std=c++11
+
+DISTFILES += \
+    Words

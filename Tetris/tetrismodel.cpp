@@ -7,6 +7,7 @@
 #include <QTextCodec>
 #include <QChar>
 #include <QDebug>
+#include <QFile>
 
 
 int blocksToPoints( int x ) {
@@ -15,12 +16,14 @@ int blocksToPoints( int x ) {
 
 // ********************************************************************************
 TetrisModel::TetrisModel( int widthBlocks, int heightBlocks ) :
+
     m_widthBlocks( widthBlocks ), m_heightBlocks( heightBlocks ), m_dropEnabled( false ) {
     if( m_widthBlocks <= 0 || m_heightBlocks <= 0 ) {
         throw std::invalid_argument( "Width and height of the tetris field must be > 0" );
     }
 
     srand( time( 0 ) );
+
     resetGame();
 }
 
@@ -84,9 +87,9 @@ void TetrisModel::doStep() {
 
                         m_fieldMatrix[ yPoints / BLOCK_SIZE ][  xPoints / BLOCK_SIZE ] = blockType;
                                      //   item.debug(yPoints,xPoints);
-                                        qDebug()<<yPoints/BLOCK_SIZE<<xPoints/BLOCK_SIZE;
-                                        qDebug()<<m_fieldMatrix[ yPoints / BLOCK_SIZE ][  xPoints / BLOCK_SIZE ];
-                       // qDebug()<<(m_fieldMatrix[ item.getBlockYPoints( yBlocks )/ BLOCK_SIZE ][  item.getBlockXPoints( xBlocks ) / BLOCK_SIZE ]);
+                                       qDebug()<<yPoints/BLOCK_SIZE<<xPoints/BLOCK_SIZE;
+                                       //qDebug()<<m_fieldMatrix[ yPoints / BLOCK_SIZE ][  xPoints / BLOCK_SIZE ];
+
 
 
 
@@ -100,11 +103,68 @@ void TetrisModel::doStep() {
             clean();
         } else {
             m_activeItem = item;
+            QString str1=item.letter;
+            QString str2=item.letter;
             ++m_itemBottomTouchCounter;
+            int coord1=0;
+            int coord2=0;
                 //getCollisionLetter();
-                getCoordItem(item.getXPoints(),item.getYPoints());
-                qDebug()<<(item.getXPoints()/BLOCK_SIZE)<<(item.getYPoints()/BLOCK_SIZE);
+                //getCoordItem(item.getXPoints(),item.getYPoints());
+                //qDebug()<<m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][item.getXPoints()/BLOCK_SIZE+1];
+                for(int i = item.getXPoints()/BLOCK_SIZE;i<m_widthBlocks;i++){
+                    if(m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i+1]==0){
 
+                        coord1=m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i];
+                        if(item.a[coord1]!=' '){
+
+                           str1 = str1 + item.a[coord1];
+
+                        }
+                       break;
+                    }else{
+
+
+                        coord1=m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i];
+
+                             if(item.a[coord1]!=' '){
+                           str1 = str1 + item.a[coord1];
+                            }
+
+                    }
+                }
+                for(int i = item.getXPoints()/BLOCK_SIZE;i>0;i--){
+
+                    if(m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i-1]==0){
+                        coord1=m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i];
+                           if(item.a[coord1]!=' '){
+
+                           str1 = item.a[coord1] + str1;
+
+                           }
+                       break;
+                    }else{
+
+
+
+                        coord1=m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i];
+                            if(item.a[coord1]!=' '){
+
+                           str1 = item.a[coord1] + str1;
+
+                            }
+
+                    }
+                }
+
+                //-----------------------------------------------------//
+
+
+
+
+
+                setFirstStr(str1);
+
+                 qDebug()<<getFirstStr()<<getSecondStr();
 
         }
     }
@@ -214,9 +274,33 @@ void TetrisModel::getCollisionLetter()
     y=getItem().getYPoints();
 
 
-    qDebug()<<getBlockType(x,y);
+    //qDebug()<<getBlockType(x,y);
 
 }
+
+QString TetrisModel::getSecondStr() const
+{
+    return secondStr;
+}
+
+void TetrisModel::setSecondStr(const QString &value)
+{
+    secondStr = value;
+}
+
+
+
+QString TetrisModel::getFirstStr() const
+{
+    return firstStr;
+}
+
+void TetrisModel::setFirstStr(const QString &value)
+{
+    firstStr = value;
+}
+
+
 
 bool TetrisModel::hasCollisions( const TetrisItem& item ) const {
     for( int xBlocks = 0; xBlocks < item.getSizeBlocks(); ++xBlocks ) {
@@ -243,7 +327,7 @@ bool TetrisModel::hasCollisions( int xPoints, int yPoints ) const {
     }
     int yBottomBlocks = yPoints + HALF_BLOCK_SIZE;
     if( yTopBlocks % BLOCK_SIZE != 0 && getBlockType( xBlocks, yBottomBlocks / BLOCK_SIZE ) ) {
-         qDebug(qPrintable(m_item.letter));
+         //qDebug(qPrintable(m_item.letter));
         return true;
     }
 
@@ -251,13 +335,19 @@ bool TetrisModel::hasCollisions( int xPoints, int yPoints ) const {
 }
 
 void TetrisModel::clean() {
+    qDebug()<<"Clean";
+    int counter;
+    QFile file("/home/alex/Tetris/Words.txt");
+    if(file.open(QFile::ReadOnly)){
+        QTextStream in(&file);
+        qDebug()<<"read";
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            if(line==getFirstStr())
+          counter = 0;
+        }
     for( int i = m_heightBlocks - 1; i >= 0; --i ) {
-        int counter = std::accumulate(
-            m_fieldMatrix[ i ].begin(),
-            m_fieldMatrix[ i ].end(),
-            0,
-            []( int a, int b ) { return ( b == 0 ) ? a : a + 1; }
-        );
+
 
         if( counter == 0 ) {
             return;
@@ -267,7 +357,7 @@ void TetrisModel::clean() {
             m_fieldMatrix.insert( m_fieldMatrix.begin(), v );
             incScore();
             ++i;
-        }
+        }}
     }
 }
 
@@ -300,33 +390,7 @@ TetrisItem TetrisItem::generateRandom() {
         TetrisItem( {
             { 3, 3 },
         } ),
-        TetrisItem( {
-            { 4, 4 },
-        } ),
-        TetrisItem( {
-            { 5, 5 },
-        } ),
-        TetrisItem( {
-            { 6, 6 },
-        } ),
-        TetrisItem( {
-            { 7, 7 },
-        } ),
-        TetrisItem( {
-            { 8, 8 },
-        } ),
-        TetrisItem( {
-            { 9, 9 },
-        } ),
-        TetrisItem( {
-            { 10, 10 },
-        } ),
-        TetrisItem( {
-            { 11, 11 },
-        } ),
-        TetrisItem( {
-            { 12, 12 },
-        } )
+
     };
     int type = rand() % ITEMS.size();
 
@@ -393,7 +457,7 @@ int TetrisItem::getBlockYPoints( int innerYBlocks ) const {
 
 void TetrisItem::debug(int y, int x)
 {
-     qDebug()<<"test"<<m_matrix[y/BLOCK_SIZE][x/BLOCK_SIZE];
+     //qDebug()<<"test"<<m_matrix[y/BLOCK_SIZE][x/BLOCK_SIZE];
 }
 
 
@@ -405,7 +469,7 @@ QChar TetrisItem::test()
         QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8")); //изменения
 
 
-     QChar a[35]={ u'а', u'б', u'в', u'г', u'д', u'е', u'ё', u'ж', u'з', u'и', u'й', u'к', u'л', u'м', u'н', u'о', u'п', u'р', u'с', u'т', u'у', u'ф', u'х', u'ц', u'ч', u'ш', u'щ', u'ь', u'ы', u'ъ', u'э', u'ю', u'я'};
+
         letter=a[getBlockType(m_xPoints,m_yPoints)];
 
                 return letter;
