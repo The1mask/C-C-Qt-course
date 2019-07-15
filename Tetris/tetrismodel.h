@@ -18,11 +18,13 @@ class TetrisItem {
 public:
     TetrisItem( int xPoints = 0, int yPoints = 0 );
     static TetrisItem generateRandom();
+    static TetrisItem generateLetterA();
+    static TetrisItem generateLetterE();
 
     bool isNull() const;
 
     void rotate();
-
+    int randtest;
     void setPosition( int xPoints, int yPoints );
     int getXPoints() const;
     int getYPoints() const;
@@ -33,12 +35,13 @@ public:
     int getBlockYPoints( int innerYBlocks ) const;
 
     void debug(int y,int x);
-        QChar a[35]={ ' ', u'а', u'б', u'в', u'г', u'д', u'е', u'ё', u'ж', u'з', u'и', u'й', u'к', u'л', u'м', u'н', u'о', u'п', u'р', u'с', u'т', u'у', u'ф', u'х', u'ц', u'ч', u'ш', u'щ', u'ь', u'ы', u'ъ', u'э', u'ю', u'я'};
+        QChar a[35]={ ' ', u'а', u'б', u'в', u'г', u'д', u'е', u'ж', u'з', u'и', u'к', u'л', u'м', u'н', u'о', u'п', u'р', u'с', u'т', u'у', u'ф', u'х', u'ц', u'ч', u'ш', u'щ', u'ь', u'ы', u'ъ', u'э', u'ю', u'я'};
        QChar letter;
        QChar test();
 
+
 private:
-    explicit TetrisItem( const Matrix& matrix );
+       explicit TetrisItem( const Matrix& matrix );
 
 private:
     int m_xPoints;
@@ -70,6 +73,9 @@ public:
     const TetrisItem& getItem() const;
     const TetrisItem& getCoordItem(int xBlocks, int yBlocks) const;
 
+    int firstElemCoord;
+    int secElemCoord;
+
 
     void rotateItem();
     void moveItemLeft();
@@ -89,6 +95,7 @@ public:
 
     QString firstStr;
     QString secondStr;
+    int abra=1;
 
 
 
@@ -101,6 +108,15 @@ public:
 
     QString getSecondStr() const;
     void setSecondStr(const QString &value);
+
+    int getFirstElemCoord() const;
+    void setFirstElemCoord(int value);
+
+    int getAbra() const;
+    void setAbra(int value);
+
+    int getSecElemCoord() const;
+    void setSecElemCoord(int value);
 
 private:
     void moveItemX( int offsetPoints );

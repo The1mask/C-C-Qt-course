@@ -39,13 +39,49 @@ const TetrisItem &TetrisModel::getCoordItem(int xBlocks, int yBlocks) const
     return 0;
 }
 
+int TetrisModel::getSecElemCoord() const
+{
+    return secElemCoord;
+}
+
+void TetrisModel::setSecElemCoord(int value)
+{
+    secElemCoord = value;
+}
+
+int TetrisModel::getFirstElemCoord() const
+{
+    return firstElemCoord;
+}
+
+void TetrisModel::setFirstElemCoord(int value)
+{
+    firstElemCoord = value;
+}
+
 
 
 void TetrisModel::doStep() {
 
+
+
     if( m_activeItem.isNull() ) {
+
         m_itemBottomTouchCounter = 0;
+        if(getAbra()==1){
+
+            m_activeItem = TetrisItem::generateLetterA();
+            setAbra(2);
+        }
+        else{
+
+
         m_activeItem = TetrisItem::generateRandom();
+             setAbra(1);
+
+
+
+        }
         m_activeItem.test();
         int xPoints = blocksToPoints( getWidthBlocks() / 2 );
         if( m_activeItem.getSizeBlocks() % 2 == 1 ) {
@@ -64,6 +100,8 @@ void TetrisModel::doStep() {
 
     int speed = m_dropEnabled ? MAX_SPEED : m_speed;
     TetrisItem item = m_activeItem;
+    QString str1=item.letter;
+    QString str2=item.letter;
     item.setPosition( m_activeItem.getXPoints(), m_activeItem.getYPoints() + speed );
 
     if( !hasCollisions( item ) ) {
@@ -86,9 +124,8 @@ void TetrisModel::doStep() {
                         int yPoints = item.getBlockYPoints( yBlocks );
 
                         m_fieldMatrix[ yPoints / BLOCK_SIZE ][  xPoints / BLOCK_SIZE ] = blockType;
-                                     //   item.debug(yPoints,xPoints);
-                                       qDebug()<<yPoints/BLOCK_SIZE<<xPoints/BLOCK_SIZE;
-                                       //qDebug()<<m_fieldMatrix[ yPoints / BLOCK_SIZE ][  xPoints / BLOCK_SIZE ];
+
+
 
 
 
@@ -103,15 +140,26 @@ void TetrisModel::doStep() {
             clean();
         } else {
             m_activeItem = item;
-            QString str1=item.letter;
-            QString str2=item.letter;
+
             ++m_itemBottomTouchCounter;
             int coord1=0;
             int coord2=0;
-                //getCollisionLetter();
-                //getCoordItem(item.getXPoints(),item.getYPoints());
-                //qDebug()<<m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][item.getXPoints()/BLOCK_SIZE+1];
+
+
+
+               if(item.getXPoints()/BLOCK_SIZE==1){
+                   coord1=m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][0];
+                   if(item.a[coord1+1]!=' '){
+
+                      str1 = item.a[coord1] + str1;
+
+                      }
+               }else{
+
                 for(int i = item.getXPoints()/BLOCK_SIZE;i<m_widthBlocks;i++){
+
+                    setFirstElemCoord(item.getXPoints()/BLOCK_SIZE);
+
                     if(m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i+1]==0){
 
                         coord1=m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i];
@@ -128,21 +176,29 @@ void TetrisModel::doStep() {
 
                              if(item.a[coord1]!=' '){
                            str1 = str1 + item.a[coord1];
+
                             }
 
                     }
                 }
-                for(int i = item.getXPoints()/BLOCK_SIZE;i>0;i--){
+                for(int i = item.getXPoints()/BLOCK_SIZE;i>=0;i--){
+
+                    if(item.getXPoints()/BLOCK_SIZE==1){
+
+                        str1 = item.a[coord1] + str1;
+                        setFirstElemCoord(coord1);
+                    }else{
 
                     if(m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i-1]==0){
                         coord1=m_fieldMatrix[item.getYPoints()/BLOCK_SIZE][i];
-                           if(item.a[coord1]!=' '){
+                        if(item.a[coord1]!=' '){
 
                            str1 = item.a[coord1] + str1;
-
+                            setFirstElemCoord(i);
                            }
                        break;
                     }else{
+
 
 
 
@@ -151,23 +207,89 @@ void TetrisModel::doStep() {
 
                            str1 = item.a[coord1] + str1;
 
+
                             }
 
                     }
-                }
+                }}}
+
+
+
+
+
+
 
                 //-----------------------------------------------------//
 
+
+               for(int i = item.getYPoints()/BLOCK_SIZE;i<=m_heightBlocks;i++){
+
+
+
+                   if(i==24){
+
+
+                       coord2=m_fieldMatrix[i][item.getXPoints()/BLOCK_SIZE];
+                          if(item.a[coord2]!=' '){
+
+                          str2 = str2 + item.a[coord2];
+                             qDebug()<<"odin"<<item.getXPoints()/BLOCK_SIZE<<qPrintable(item.a[coord2]);
+                            setSecElemCoord(i);
+                         }
+
+                             break;
+                   }else{
+
+
+                       coord2=m_fieldMatrix[i][item.getXPoints()/BLOCK_SIZE];
+                            if(item.a[coord2]!=' '){
+
+                          str2 = str2 + item.a[coord2];
+                                 qDebug()<<str2<<item.a[coord2];
+
+                        }
+
+                   }
+               }
+               for(int i = item.getYPoints()/BLOCK_SIZE;i>=0;i--){
+                    qDebug()<<i;
+
+
+                   if(m_fieldMatrix[i-1][item.getXPoints()/BLOCK_SIZE]==0){
+
+                       coord2=m_fieldMatrix[i][item.getXPoints()/BLOCK_SIZE];
+                            if(item.a[coord2]!=' '){
+                         qDebug()<<"tri"<<i;
+                          str2 = str2 + item.a[coord2] ;
+
+                            }
+                      break;
+                   }else{
+
+
+
+
+                       coord2=m_fieldMatrix[i][item.getXPoints()/BLOCK_SIZE];
+                        if(item.a[coord2]!=' '){
+
+                          str2 = str2 + item.a[coord2];
+                            }
+
+
+
+                   }
+               }}}
 
 
 
 
                 setFirstStr(str1);
+                setSecondStr(str2);
 
-                 qDebug()<<getFirstStr()<<getSecondStr();
+                 qDebug()<<getFirstStr()<<getSecondStr()<<getSecElemCoord();
 
-        }
-    }
+
+
 }
 
 bool TetrisModel::isGameOver() const {
@@ -278,6 +400,16 @@ void TetrisModel::getCollisionLetter()
 
 }
 
+int TetrisModel::getAbra() const
+{
+    return abra;
+}
+
+void TetrisModel::setAbra(int value)
+{
+    abra = value;
+}
+
 QString TetrisModel::getSecondStr() const
 {
     return secondStr;
@@ -335,29 +467,53 @@ bool TetrisModel::hasCollisions( int xPoints, int yPoints ) const {
 }
 
 void TetrisModel::clean() {
-    qDebug()<<"Clean";
-    int counter;
+
+    //qDebug()<<"Clean";
+    int counter=0;
     QFile file("/home/alex/Tetris/Words.txt");
     if(file.open(QFile::ReadOnly)){
         QTextStream in(&file);
         qDebug()<<"read";
+         //qDebug()<<m_item.getXPoints()/BLOCK_SIZE<<getFirstElemCoord();
         while (!in.atEnd()) {
             QString line = in.readLine();
-            if(line==getFirstStr())
-          counter = 0;
-        }
-    for( int i = m_heightBlocks - 1; i >= 0; --i ) {
+            if(line==getFirstStr()){
+                qDebug()<<"finde1";
+
+          counter = 1;
+
+            }else{
+                if(line==getSecondStr()){
+                  qDebug()<<"finde2";
+                  counter = 2;
+                }
+            }}
+    for( int i = 0; i <= getFirstStr().size(); ++i ) {
 
 
         if( counter == 0 ) {
             return;
-        } else if( counter == getWidthBlocks() ) {
-            m_fieldMatrix.erase( m_fieldMatrix.begin() + i );
-            std::vector< int > v( getWidthBlocks() );
-            m_fieldMatrix.insert( m_fieldMatrix.begin(), v );
+        } else if( counter == 1 ) {
+            qDebug()<<"start1";
+
+            if(m_fieldMatrix[m_item.getYPoints()/BLOCK_SIZE-1][getFirstElemCoord()+i]==0){
+            m_fieldMatrix[m_item.getYPoints()/BLOCK_SIZE][getFirstElemCoord()+i]=0;
+            }else{
+
+                 m_fieldMatrix[m_item.getYPoints()/BLOCK_SIZE][getFirstElemCoord()+i]=m_fieldMatrix[m_item.getYPoints()/BLOCK_SIZE-1][getFirstElemCoord()+i];
+                 m_fieldMatrix[m_item.getYPoints()/BLOCK_SIZE-1][getFirstElemCoord()+i]=0;
+
+
+            }
+
             incScore();
-            ++i;
-        }}
+
+        }else if( counter == 2 ) {
+            qDebug()<<"start2";
+
+
+            m_fieldMatrix[m_item.getYPoints()/BLOCK_SIZE][getSecElemCoord()-i]=0;
+           }}
     }
 }
 
@@ -380,22 +536,133 @@ TetrisItem::TetrisItem( int xPoints, int yPoints ) : m_xPoints( xPoints ), m_yPo
 }
 
 TetrisItem TetrisItem::generateRandom() {
+    int type;
     static const std::vector< TetrisItem > ITEMS = {
-        TetrisItem( {
-            { 1, 1 },
-        } ),
+
         TetrisItem( {
             { 2, 2 },
         } ),
         TetrisItem( {
             { 3, 3 },
         } ),
+        TetrisItem( {
+            { 4, 4 },
+        } ),
+        TetrisItem( {
+            { 5, 5 },
+        } ),
+        TetrisItem( {
+            { 7, 7 },
+        } ),
+        TetrisItem( {
+            { 8, 8 },
+        } ),
+
+        TetrisItem( {
+            { 10, 10 },
+        } ),
+        TetrisItem( {
+            { 9, 9 },
+        } ),
+        TetrisItem( {
+            { 11, 11 },
+        } ),
+        TetrisItem( {
+            { 13, 13 },
+        } ),
+        TetrisItem( {
+            { 14, 14 },
+        } ),
+        TetrisItem( {
+            { 15, 15 },
+        } ),
+        TetrisItem( {
+            { 16, 16 },
+        } ),
+        TetrisItem( {
+            { 17, 17 },
+        } ),
+        TetrisItem( {
+            { 18, 18 },
+        } ),
+        TetrisItem( {
+            { 19, 19 },
+        } ),
+        TetrisItem( {
+            { 20, 20 },
+        } ),
+        TetrisItem( {
+            { 21, 21 },
+        } ),
+        TetrisItem( {
+            { 22, 22 },
+        } ),
+
+        TetrisItem( {
+            { 24, 24 },
+        } ),
+        TetrisItem( {
+            { 25, 25 },
+        } ),
+        TetrisItem( {
+            { 26, 26 },
+        } ),
+        TetrisItem( {
+            { 27, 27 },
+        } ),
+        TetrisItem( {
+            { 28, 28 },
+        } ),
+
+
 
     };
-    int type = rand() % ITEMS.size();
+      type=rand()%23+1;
 
-    return ITEMS[ type ];
+
+
+
+
+      return ITEMS[ type ];
 }
+
+TetrisItem TetrisItem::generateLetterA() {
+    int type;
+    static const std::vector< TetrisItem > ITEMS = {
+        TetrisItem( {
+            { 1, 1 },
+        } ),
+        TetrisItem( {
+            { 6, 6 },
+        } ),
+        TetrisItem( {
+            { 9, 9 },
+        } ),
+        TetrisItem( {
+            { 23, 23 },
+        } ),
+        TetrisItem( {
+            { 31, 31 },
+        } ),
+        TetrisItem( {
+            { 29, 29 },
+        } ),
+        TetrisItem( {
+            { 30, 30 },
+        } ),
+
+    };
+
+
+        type=rand()%5;
+        qDebug()<<type;
+      return ITEMS[ type ];
+}
+
+
+
+
+
 
 bool TetrisItem::isNull() const {
     return m_matrix.empty();

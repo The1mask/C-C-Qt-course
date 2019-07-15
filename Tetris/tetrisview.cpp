@@ -36,6 +36,8 @@ void TetrisView::refresh() {
 }
 
 void TetrisView::paintEvent( QPaintEvent* ) {
+    const TetrisItem& item = m_model.getItem();
+    QString str=QChar(item.letter);
     setlocale(LC_ALL,"rus");
     QPainter painter( this );
     painter.fillRect( 0, 0, m_width, m_height, BACKGROUND_COLOR );
@@ -45,16 +47,21 @@ void TetrisView::paintEvent( QPaintEvent* ) {
         painter.setPen( DEBUG_GRID_COLOR );
         for( int x = BLOCK_SIZE_PIXELS; x < m_width; x += BLOCK_SIZE_PIXELS ) {
             painter.drawLine( x, 0, x, m_height );
+
+
         }
         for( int y = BLOCK_SIZE_PIXELS; y < m_height; y += BLOCK_SIZE_PIXELS ) {
             painter.drawLine( 0, y, m_width, y );
+
         }
     }
-const TetrisItem& item = m_model.getItem();
- QString str=QChar(item.letter);
+
+
     for( int x = 0; x < m_model.getWidthBlocks(); ++x ) {
         for( int y = 0; y < m_model.getHeightBlocks(); ++y ) {
             drawBlock( blocksToPoints( x ) + HALF_BLOCK_SIZE, blocksToPoints( y ) + HALF_BLOCK_SIZE, m_model.getBlockType( x, y ), &painter );
+
+
 
         }
     }
@@ -63,8 +70,8 @@ const TetrisItem& item = m_model.getItem();
 
     for( int x = 0; x < item.getSizeBlocks(); ++x ) {
         for( int y = 0; y < item.getSizeBlocks(); ++y ) {
-            drawBlock( item.getBlockXPoints( x ), item.getBlockYPoints( y ), item.getBlockType( x, y ), &painter );
-            painter.drawText(item.getBlockXPoints( x )*2, item.getBlockYPoints( y )*2, str);
+            drawBlock( item.getBlockXPoints( x ), item.getBlockYPoints( y ), item.getBlockType( x, y ), &painter);
+
            // qDebug()<<item.letter;
         }
     }
@@ -101,7 +108,10 @@ void TetrisView::keyReleaseEvent( QKeyEvent* e ) {
     }
 }
 
-void TetrisView::drawBlock( int xPoints, int yPoints, int type , QPainter* painter ) {
+void TetrisView::drawBlock(int xPoints, int yPoints, int type , QPainter* painter ) {
+    const TetrisItem& item = m_model.getItem();
+
+
     static const std::vector< QColor > COLOR_TABLE = {
         Qt::white,
         Qt::yellow,
@@ -118,4 +128,5 @@ void TetrisView::drawBlock( int xPoints, int yPoints, int type , QPainter* paint
     int xPixels = modelPointsToPixels( xPoints ) - HALF_BLOCK_SIZE_PIXELS;
     int yPixels = modelPointsToPixels( yPoints ) - HALF_BLOCK_SIZE_PIXELS;
     painter->fillRect( xPixels, yPixels, BLOCK_SIZE_PIXELS, BLOCK_SIZE_PIXELS, COLOR_TABLE[ type - 1 ] );
+    painter->drawText(xPixels+10, yPixels+15, item.a[type] );
 }

@@ -20,7 +20,7 @@ protected:
     void keyPressEvent( QKeyEvent* e );
     void keyReleaseEvent( QKeyEvent* e );
 
-    void drawBlock( int xPoints, int yPoints, int type, QPainter* painter );
+    void drawBlock( int xPoints, int yPoints, int type, QPainter* painter);
 
 private:
     TetrisModel m_model;

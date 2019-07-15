@@ -26,4 +26,5 @@ FORMS    +=
 QMAKE_CXXFLAGS += -std=c++11
 
 DISTFILES += \
-    Words
+    Words \
+    Words.txt
