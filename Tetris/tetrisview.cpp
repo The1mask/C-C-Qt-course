@@ -120,6 +120,22 @@ void TetrisView::drawBlock(int xPoints, int yPoints, int type , QPainter* painte
         Qt::cyan,
         Qt::magenta,
         Qt::lightGray,
+        Qt::blue, 
+        Qt::white,
+        Qt::yellow,
+        Qt::green,
+        Qt::red,
+        Qt::cyan,
+        Qt::magenta,
+        Qt::lightGray,
+        Qt::blue, 
+        Qt::white,
+        Qt::yellow,
+        Qt::green,
+        Qt::red,
+        Qt::cyan,
+        Qt::magenta,
+        Qt::lightGray,
         Qt::blue
     };
 
